@@ -39,7 +39,7 @@ export default {
 
 <style lang="less" scoped>
 #Index{
-  width: 100%; 
+  width: 100%; height: 100%;
   // background: #fff url(https://cdn2.jianshu.io/assets/web/gupao-43e5e6af6d2d1b2639ab8da6cdcdd1ed.png) no-repeat center center;
   // background-size: 100% 100%;
 }

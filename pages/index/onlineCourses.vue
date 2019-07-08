@@ -1,48 +1,59 @@
 <template>
-<ul class="list" :infinite-scroll="load">
-                    <li v-for="(i,index) in count" :key="index" class="list-item">{{ i }}</li>
-                </ul>
-    <!-- <div id="onlineCourses">
-        
+    <div id="onlineCourses">
         <div class="swiper">
             <div class="cascader">
                 <el-cascader-panel :options="options" :props="{ expandTrigger: 'hover' }"></el-cascader-panel>
             </div>
             <el-carousel height="500px">
                 <el-carousel-item v-for="(item,index) in getHomeList.BannerList" :key="index">
-                    <img class="swiperImg" :src="item.ImageUrl" alt="" srcset="">
+                    <!-- <img class="swiperImg" :src="item.ImageUrl" alt="" srcset=""> -->
                     <div class="swiper_imgs"></div>
                 </el-carousel-item>
             </el-carousel>
         </div>
 
-        <div class="main">
+        <div class="onlineCourses_main">
 
             <div class="zc indexService">
                 <i class="el-icon-d-arrow-right"></i>
-                <h3>讲师风采</h3>
+                <h3>全部课程</h3>
                 <p></p>
             </div>
 
-            <div class="allCourse"></div>
+            <div class="allCourse">
+              分类：<span v-for="(item,index) in category" :key="index" :class="{activeClass: index == classIndex}" @click="classActives(index)">{{item.CategoryName}}</span>
+            </div>
             <div class="infinite-list-wrapper">
-                <ul class="list" :infinite-scroll="load">
-                    <li v-for="(i,index) in count" :key="index" class="list-item">{{ i }}</li>
+            
+                <ul class="list" v-infinite-scroll="load">
+                    <li v-for="(item,index) in collegelist" :key="index" class="list-item">
+                      <div class="courseList">
+                        <div><img :src="item.SmallImageUrl" alt="" srcset=""></div>
+                        <section>
+                          <h3>{{item.Title}}</h3>
+                          <p>{{item.Description}}</p>
+                        </section>
+                      </div>
+                    </li>
                 </ul>
                 <p v-if="loading">加载中...</p>
                 <p v-if="noMore">没有更多了</p>
+            
             </div>
 
         </div>
 
-    </div> -->
+    </div>
 </template>
 <script>
 import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
+// import vueiInfinite from 'vue-infinite-scroll'
+// import Vue from 'vue'
+// Vue.use(vueiInfinite)
 export default {
     data(){
         return{
-            count: 15,
+            count: 15, classIndex:0,
         loading: false,
             value: [],
         options: [{
@@ -245,6 +256,8 @@ export default {
     computed:{
         ...mapState({
             getHomeList: state => state.getHomeList,
+            category: state => state.category,
+            collegelist: state => state.collegelist,
         }),
         noMore () {
             return this.count >= 20
@@ -254,7 +267,7 @@ export default {
         }
     }, 
     created(){
-        // this.$store.dispatch('getHomeList')
+        this.$store.dispatch('category')
     },
     methods: {
         handleChange(value) {
@@ -263,17 +276,25 @@ export default {
         load () {
             this.count += 2
             console.log('435')
-            this.loading = true
-            setTimeout(() => {
-            this.loading = false
-            }, 2000)
+            // this.loading = true
+            // setTimeout(() => {
+            // this.loading = false
+            // }, 2000)
+        },
+        classActives(index){
+            this.classIndex = index
+            let datas = {
+                CategoryId: this.category[index].CategoryId, PageIndex: 1, PageSize: 10, Type: 1
+            }
+            console.log(this.category[index].CategoryId,index)
+            this.$store.dispatch('collegelist', datas)
         }
     }
 }
 </script>
 <style lang="less" scoped>
 #onlineCourses{
-    width: 100%; height: 1000px; padding-top: 61px;
+    width: 100%; height: 100%; padding-top: 61px; box-sizing: border-box;
 }
 
 .swiper{
@@ -299,14 +320,14 @@ export default {
 }
 
 .cascader{
-    width: 500px; position: absolute; top: 0; left: 0; z-index: 10;
+    width: 600px; position: absolute; top: 0; left: 0; z-index: 10; background-color: white;
 }
 
 
 
 
-.main{
-  width: calc(100% - 500px); min-width: 1111px; margin: 0px auto;
+.onlineCourses_main{
+  width: calc(100% - 500px); min-width: 1111px; height: 500px; margin: 0px auto;
 }
 .zc{
   width: 100%; height: 50px; margin: 0 auto; display: flex; align-items: center; margin-top: 20px; position: relative;
@@ -317,10 +338,26 @@ export default {
   div:nth-child(3n){margin: 0}
 }
 
-ul{height: 200px; border: 1px solid red; overflow-y: auto;}
-li{
-    display: inline-block; width: 100%; height: 100px;
+
+.allCourse{
+  width: 100%; margin-bottom: 20px;
+  span{margin-left: 20px; padding: 5px 10px; cursor: pointer;}
+  .activeClass{ background-color: lightcoral; color: white;}
 }
+
+.list{ overflow-y: auto;}
+.list>li{
+    display: inline-block; width: 100%; height: 300px;
+    .courseList{
+      width: 100%; height: 100%; display: flex;
+        div{
+            width: 300px; height: 200px; background-color: lightblue;
+            img{width: 100%; height: 100%;}
+        }
+    }
+}
+
+
 </style>
 
 

@@ -1,11 +1,11 @@
 <template>
     <div id="top">
-        <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
+        <el-menu :default-active="indexUrlActive" class="el-menu-demo" mode="horizontal" @select="handleSelect" background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
             <!-- <img class="logoTop" src="~/static/images/vue.png" alt="" srcset=""> -->
             <div class="logoTop"></div>
-            <el-menu-item v-for="(item,index) in tabTitle" :index="index+''" :key="index" @click="router(index)">{{item.title}}</el-menu-item>
-            <el-menu-item index="6" class="login"><a href="#" target="_blank">登录</a></el-menu-item>
-            <el-menu-item index="7" class="login"><a href="#" target="_blank">注册</a></el-menu-item>
+            <el-menu-item v-for="(item,index) in tabTitle" :index="index+''" :key="index">{{item.title}}</el-menu-item>
+            <el-menu-item index="6" class="login" @click="login">登录</el-menu-item>
+            <el-menu-item index="7" class="login" @click="register">注册</el-menu-item>
         </el-menu>
     </div>
 </template>
@@ -31,13 +31,22 @@ export default {
         })
     },
     methods:{
-        router(index){
-            this.$store.commit('indexUrlActive', index)
-            console.log(index)
-            this.$router.push({name: this.tabTitle[index].url})
-        },
         handleSelect(key, keyPath) {
-            console.log(key, keyPath);
+            // console.log(key, keyPath);
+            this.$store.commit('indexUrlActive', key)
+            this.$router.push({name: this.tabTitle[parseInt(key)].url})
+        },
+        login(){
+            let data = {
+                Mobile: '18106220219', Type: 1
+            }
+            this.$store.dispatch('phoneCode', data)
+        },
+        register(){
+            let data = {
+                Mobile: '18506181016', Pwd:'123456qwe.', Captcha:'877534', FriendCode:''
+            }
+            this.$store.dispatch('register', data)
         },
     }
 }

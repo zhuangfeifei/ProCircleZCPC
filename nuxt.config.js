@@ -43,7 +43,7 @@ export default {
     [
         '/axios', 
         { 
-          target: 'http://192.168.1.173:8002', 
+          target: 'http://192.168.1.173:8002/pcapi/pc/api', 
           pathRewrite: { '^/axios' : '' }
         }
     ]
