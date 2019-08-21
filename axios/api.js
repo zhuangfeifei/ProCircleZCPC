@@ -2,20 +2,22 @@ import Vue from 'vue'
 import axios from 'axios'
 // import $ from 'jquery'
 import { Loading } from 'element-ui';
+// import qs from 'qs'
 
-let urls = true ? '/axios' : 'https://www.proseer.cn'
+let urls = false ? '/axios' : 'https://www.proseer.cn/zcxypc/api'
 let loading
 
 axios.defaults.baseURL = urls
 
 // 请求拦截
 axios.interceptors.request.use(function (config) {
-    loading = Loading.service({
-        lock: true,
-        text: '加载中...',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0)'
-    });
+    // loading = Loading.service({
+    //     lock: true,
+    //     text: '加载中...',
+    //     spinner: 'el-icon-loading',
+    //     background: 'rgba(0, 0, 0, 0)',
+    //     // target:'#__nuxt'
+    // });
     
     return config
 
@@ -25,12 +27,14 @@ axios.interceptors.request.use(function (config) {
 })
 
 // 请求
-const fetch = (method , url, params = '') => {
+const fetch = (method , url, token, params = '') => {
     
     axios.defaults.headers.post['Content-Type'] = 'application/json'
+    axios.defaults.headers.post['Token'] = token
     
     // 判断是否是FormData
     const data = params
+    // const data = qs.stringify(params)
     //   const data = Object.prototype.toString.call(params) === '[object FormData]' ? params : headers.Content_Type === 'application/json' ? params : params == '' ? params : JSON.stringify(params)   
     return new Promise((resolve, reject) => {
         axios({method, url, data})

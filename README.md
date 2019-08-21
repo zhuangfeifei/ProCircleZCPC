@@ -1,6 +1,6 @@
 # ProCircleZCPC
 
-> My tiptop Nuxt.js project
+> 箴创学院邀请众多实力讲师、聚焦于跨境电商外贸领域、为外贸跨境人提供实战课程的知识付费平台
 
 ## Build Setup
 
